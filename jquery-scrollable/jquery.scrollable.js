@@ -29,7 +29,7 @@
             );
 
             function onMousewheel(event,delta) {
-                var pos = Math.abs(parseInt(-(delta / 20 ) * 100));
+                var pos = Math.abs(parseInt(-(delta / 20 ) * 100,10));
                 if(delta > 0) {
                     $track.slider("moveTo","-="+pos);
                 }
@@ -77,7 +77,7 @@
         var handle_height = Math.max(scrollable.attr("offsetHeight") * 
         ( scrollable.attr("offsetHeight") / scrollable.attr("scrollHeight") ),min_track_height);
         handle_height = Math.min(handle_height,track.attr("offsetHeight"));
-        track_handle.css("height",parseInt(handle_height)+"px");
+        track_handle.css("height",parseInt(handle_height,10)+"px");
     }
 
     $.fn.scrollable.defaults = {
