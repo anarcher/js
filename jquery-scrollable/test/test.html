@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <script src="jquery/jquery-1.2.6.min.js" type="text/javascript"></script>
+    <script src="jquery/ui.core.js" type="text/javascript"></script>
+    <script src="jquery/ui.slider.js" type="text/javascript"></script>
+    <script src="jquery/jquery.mousewheel.js" type="text/javascript"></script>
+    <script src="../jquery.scrollable.js" type="text/javascript"></script>
+    <style>
+        #scrollbar_contents {
+            width: 500px;
+            height: 300px;
+            margin:0;
+            overflow: hidden;
+            border:1px solid #21ff32;
+        }
+
+        #scrollbar_track {
+            width: 20px;
+            height: 300px;
+            margin: 0;
+            background: #bbbbbb;
+            position: relative;
+        }
+        #scrollbar_handle {
+            width: 18px;
+            height: 44px;
+            position: absolute;
+            background: #478AFF;
+            border: solid 1px black;
+        }
+    </style>
+    <script type="text/javascript">
+    function before_change(e,ui) {
+       if(ui.value >= 90) {
+            add();
+            setTimeout(function() {
+                if($("#scrollbar_track").slider("value") >= 90) {
+                    $("#scrollbar_track").slider("moveTo","80",null,false)
+                }
+            },3000);
+       } else if(ui.value >= 70) {
+            add(); 
+       }
+    }
+
+    $(document).ready(function() {
+       $("#scrollbar_contents").scrollable({
+           animate: false,
+           track : '#scrollbar_track',
+           track_handle: '#scrollbar_handle',
+           before_change : before_change
+       });
+
+    });
+
+    </script>
+</head>
+<body>
+    <div>
+        <div id="scrollbar_contents" style="float:left;">
+            <!-- contents -->
+            <div>123</div>
+            <div>123</div>
+            <div>abc</div>
+            <div>123</div>
+            <div>123</div>
+            <div>abc</div>
+             <div>123</div>
+            <div>123</div>
+            <div>abc</div>
+            <div>abc</div>
+        </div>
+        <div id="scrollbar_track" style="float:left;">
+            <div id="scrollbar_handle"></div>
+        </div>
+        <div class="clear:both;"></div>
+    </div>
+    <script type="text/javascript">
+    function add() {
+        $('#scrollbar_contents').append(
+            $('<div>12312312</div>')
+        );
+        /*
+        $.fn.scrollable.recalculate(
+            $('#scrollbar_contents'),
+            $('#scrollbar_track'),
+            $('#scrollbar_handle'),
+            $.fn.scrollable.defaults.track_handle_height 
+        );
+        */
+        $("#scrollbar_contents").scrollable.recalculate();
+//      $("#scrollbar_contents").scrollable.recalculate($('#scrollbar_contents'),$('#scrollbar_track'),$('#scrollbar_handle'),10);
+    }
+    </script>
+    <a href="#" onclick="add(); return false;">add</a>
+</body>
+</html>
