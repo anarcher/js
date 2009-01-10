@@ -8,11 +8,13 @@
             $track.slider({
                 axis: 'vertical', 
                 animate: o.animate,
+                startValue:1,
                 handle: o.track_handle,
                 slide: onScrollSlide,
                 change: onScrollChange
             });
             $track_handle = $(o.track_handle);
+            $track.hide();
 
             $this.scrollTop(0);
             recalculate($this,$track,$track_handle,o.track_handle_height);
@@ -67,17 +69,18 @@
     
 
     function recalculate(scrollable,track,track_handle,min_track_height) {
-        if(scrollable.attr("offsetHeight") > scrollable.attr("scrollHeight")) {
+        if(scrollable.attr("offsetHeight") >= scrollable.attr("scrollHeight")) {
             track.hide();
             return ;
-        }
-        if(track.css("display") != 'block') {
-            track.show();
         }
         var handle_height = Math.max(scrollable.attr("offsetHeight") * 
         ( scrollable.attr("offsetHeight") / scrollable.attr("scrollHeight") ),min_track_height);
         handle_height = Math.min(handle_height,track.attr("offsetHeight"));
         track_handle.css("height",parseInt(handle_height,10)+"px");
+
+        if(track.css("display") != 'block') {
+            track.show();
+        }
     }
 
     $.fn.scrollable.defaults = {
