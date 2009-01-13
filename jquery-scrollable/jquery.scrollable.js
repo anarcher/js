@@ -3,20 +3,19 @@
         var opts = $.extend({},$.fn.scrollable.defaults,options);
         return this.each(function() {
             $this = $(this);
+            $this.scrollTop(0);
             var o = $.meta ? $.extend({}, opts, $this.data()) : opts;
             $track = $(o.track);
+            $track_handle = $(o.track_handle);
             $track.slider({
                 axis: 'vertical', 
                 animate: o.animate,
-                startValue:1,
+                startValue:0,
                 handle: o.track_handle,
                 slide: onScrollSlide,
-                change: onScrollChange
+                change: onScrollChange,
+                stop : o.stop_scroll
             });
-            $track_handle = $(o.track_handle);
-            $track.hide();
-
-            $this.scrollTop(0);
             recalculate($this,$track,$track_handle,o.track_handle_height);
 
             $.fn.scrollable.recalculate = function() {
@@ -31,16 +30,18 @@
             );
 
             function onMousewheel(event,delta) {
-                var pos = Math.abs(parseInt(-(delta / 20 ) * 100,10));
+                var offsetHeight = $this.attr("offsetHeight");
+                var scrollHeight = $this.attr("scrollHeight");
+                if(offsetHeight >= scrollHeight) { return true; }
+
+                var pos = Math.abs(parseInt(-(delta / 10 ) * 100,10));
                 if(delta > 0) {
                     $track.slider("moveTo","-="+pos);
                 }
                 else {
                     $track.slider("moveTo","+="+pos);
                 }
-                if($this.attr("offsetHeight") > $this.attr("scrollHeight")) { 
-                    return true;
-                }
+                if(offsetHeight > scrollHeight) { return true; }
                 return false;
             }
 
@@ -71,24 +72,27 @@
     function recalculate(scrollable,track,track_handle,min_track_height) {
         if(scrollable.attr("offsetHeight") >= scrollable.attr("scrollHeight")) {
             track.hide();
+            track_handle.hide();
             return ;
+        }
+        if(track.css("display") != 'block') {
+            track.show();
+            track_handle.show();
         }
         var handle_height = Math.max(scrollable.attr("offsetHeight") * 
         ( scrollable.attr("offsetHeight") / scrollable.attr("scrollHeight") ),min_track_height);
         handle_height = Math.min(handle_height,track.attr("offsetHeight"));
         track_handle.css("height",parseInt(handle_height,10)+"px");
-
-        if(track.css("display") != 'block') {
-            track.show();
-        }
+        
     }
 
     $.fn.scrollable.defaults = {
-        animate : true,
+        animate : false,
         track : '#scrollbar_track',
         track_handle : '#scrollbar_handle',
-        track_handle_height : 20,
+        track_handle_height : 44,
         before_change : function() {},
-        after_change : function() {}
+        after_change : function() {},
+        stop_scroll : function() {}
     }
 })(jQuery);
