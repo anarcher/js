@@ -1,0 +1,27 @@
+<html>
+<head>
+<style>
+#images {
+    width:128px;
+    height:98px;
+    top:0;
+    left:0;
+}
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript">
+function scrollTo(selector) {
+    var targetOffset = $(selector).offset().top;
+    $('html,body').animate({scrollTop: targetOffset}, 500);
+}
+$(document).ready(function() {
+});
+</script>
+</head>
+<body>
+    <div id="images">
+        <img src="http://cfs4.flvs.daum.net/files/51/91/87/90/20270181/thumb.jpg" width="128" height="98" />
+        <img src="http://cfs4.flvs.daum.net/files/51/91/87/90/20270181/thumb.jpg" width="128" height="98" />
+    </div>
+</body>
+</html>
