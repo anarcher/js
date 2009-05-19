@@ -113,6 +113,23 @@ $.fn.imageflow = function(o) {
                 running = true;
                 var half_visible = o.visible / 2;
                 vis().each(function(i) {
+                    var $tt = $(this);
+                    if(i == 2) {
+                        $('img',$tt).parent().css('z-index',100);
+			            $('img',$tt).animate({ top: '-20px', left: '-20px', height: '104px', width: '104px' }, 1212);
+                        /*
+                        $tt.css({
+                            height: '104px',
+                            width:'102px'});
+                        */
+                    }
+                    else {
+                        $('img',$tt).animate({ top: 0, left: 0, height: '90px', width: '90px' }, 'fast', function() {
+                            $('img',$tt).parent().css('z-index',1);
+			            });
+                        
+                    }
+                    /*
                     if(half_visible < i) {
                         var resize = 100 - ((i+1 - half_visible) * 20);
                         $("img",this).animate({ top : "-"+resize+"%",left: "-"+resize+"%", width: resize+"%", height : resize + "%" } , 500); 
@@ -121,8 +138,7 @@ $.fn.imageflow = function(o) {
                         var resize = 100 - (half_visible-i) * 20 ;
                         $("img",this).animate({ top : "-"+resize+"%", left: "-"+resize+"%", width : resize+"%", height : resize + "%"} , 500);
                     }
-
-                    console.log(resize);
+                    */
                 });
 
                 ul.animate(
