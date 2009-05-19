@@ -4,8 +4,8 @@
     <script type="text/javascript" src="jquery.imageflow.0.1.js"></script>
 </head>
 <body>
-    <a href="#" id="prev">prev</a>
-    <a href="#" id="next">next</a>
+    <a href="#" id="prev" onclick="return prev();">prev</a>
+    <a href="#" id="next" onclick="return next();">next</a>
     <div id="a">
         <ul>
             <li style="padding:20px;">
@@ -44,8 +44,20 @@
             scroll: 1,
             visible:5
         });
-        console.log($("#a").imageflow.stop());
     });
+
+    function prev() {
+        $("#a").stop_imageflow();
+        setTimeout(function() {
+            $("#a").start_imageflow();
+        },3000);
+    }
+    function next() {
+        $("#a").stop_imageflow();
+        setTimeout(function() {
+            $("#a").start_imageflow();
+        },3000);
+    }
     </script>
 </body>
 </html>

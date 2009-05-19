@@ -1,5 +1,19 @@
 (function($) {                                          
 
+var options = {};
+
+$.fn.stop_imageflow = function() {
+    return this.each(function() {
+        stop(this);
+    });
+}
+
+$.fn.start_imageflow = function() {
+    return this.each(function() {
+        start(this);
+    });
+}
+
 $.fn.imageflow = function(o) {
     o = $.extend({
         btnPrev : null,
@@ -14,11 +28,12 @@ $.fn.imageflow = function(o) {
         start : 0,
         scroll : 1,
         beforeStart : null,
-        afterEnd : null
+        afterEnd : null,
     }, o || {});
 
+    options = o;
+
     return this.each(function() {
-        var $this = $(this);
         var running = false ;
         var animCss = o.vertical ? "top" : "left" ;
         var sizeCss = o.vertical ? "height" : "width" ;
@@ -31,6 +46,7 @@ $.fn.imageflow = function(o) {
         }
 
         var li = $("li",ul), itemLength = li.size(), curr = o.start;
+        this.curr = curr;
 
         li.css({ overflow : "hidden" , float : o.vertical ? "none" : "left" });
         ul.css({ margin : "0", padding : "0", position : "relative" , 
@@ -68,29 +84,15 @@ $.fn.imageflow = function(o) {
             });
 
         if(o.auto)
-            $this.flowTimeout = setInterval(function() {
+            this.flowTimeout = setInterval(function() {
                 go(curr+o.scroll);
             }, o.auto+o.speed);
-
-        $this.stop = function () {
-            if($this.flowTimeout) {
-                clearTimeout($this.flowTimeout);
-            }
-        };
-        $this.start = function() {
-            if(o.auto) {
-                $this.flowTimeout = setInterval(function() {
-                    go(curr+o.scroll);
-                }, o.auto+ o.speed);
-            }
-        }
 
         function vis() {
             return li.slice(curr).slice(0,v);
         };
 
-
-        function go(to) {
+        var go = function(to) {
             if(!running) {
                 if(o.beforeStart) o.beforeStart.call(this,vis());
                 if(o.circular) {
@@ -131,9 +133,26 @@ $.fn.imageflow = function(o) {
             }
             return false;
         };
-        return $this;
+        this.go = function(to) {
+            go(curr + to);
+        }
     });
 };
+
+function stop(obj) {
+    if(obj.flowTimeout) {
+        clearInterval(obj.flowTimeout);
+    }
+    else {
+        alert('aa');
+    }
+}
+
+function start(obj) {
+    obj.flowTimeout = setInterval(function() {
+        obj.go(options.scroll);
+    }, options.auto + options.speed);
+}
 
 function css(el, prop) {
     return parseInt($.css(el[0], prop)) || 0;
