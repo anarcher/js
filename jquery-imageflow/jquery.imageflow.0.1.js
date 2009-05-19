@@ -111,6 +111,19 @@ $.fn.imageflow = function(o) {
                     else curr = to;
                 }
                 running = true;
+                var half_visible = o.visible / 2;
+                vis().each(function(i) {
+                    if(half_visible < i) {
+                        var resize = 100 - ((i+1 - half_visible) * 20);
+                        $("img",this).animate({ top : "-"+resize+"%",left: "-"+resize+"%", width: resize+"%", height : resize + "%" } , 500); 
+                    }
+                    else {
+                        var resize = 100 - (half_visible-i) * 20 ;
+                        $("img",this).animate({ top : "-"+resize+"%", left: "-"+resize+"%", width : resize+"%", height : resize + "%"} , 500);
+                    }
+
+                    console.log(resize);
+                });
 
                 ul.animate(
                     animCss == "left" ? { left: -(curr*liSize) } : { top: -(curr*liSize) } , o.speed, o.easing,
@@ -120,6 +133,7 @@ $.fn.imageflow = function(o) {
                         running = false;
                     }
                 );
+
                 // Disable buttons when the carousel reaches the last/first, and enable when not
                 if(!o.circular) {
                     $(o.btnPrev + "," + o.btnNext).removeClass("disabled");
