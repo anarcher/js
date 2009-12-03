@@ -4,95 +4,16 @@
 <body>
 
 <script type="text/javascript" src="./right-src.js"></script>
+<script type="text/javascript" src="./history.js"></script>
 <script type="text/javascript">
 
-function setScope(callback, scope) {
-    return function() {
-        return callback.apply(scope, arguments);
-    };
-};
-
-var History = new Class({
-    extend: {
-        Version: '0.1',
-    },
-    include: Options,
-    Options: {
-        binders: null,
-        defaultHash: ''
-    },
-    initialize: function(options) {
-        this.setOptions(options);
-        var hash = (location.hash == '' || location.hash == '#')  ? this.options.defaultHash : location.hash;
-        if (Browser.IE) { 
-            document.write('<iframe id="msieframe" style="display: none;"></iframe>');
-            this.iframe = $("msieframe").contentWindow.document;
-            this.iframe.open();
-            this.iframe.close();
-            this.iframe.location.hash = location.hash;
-            this.hash = this.iframe.location.hash;
-        }
-        else {
-            this.hash = hash;
-        }
-        //this.changing(hash);
-        this.intervalId = setInterval(setScope(this.checkHash,this), 200);
-    },
-    setLocation: function(hash) {
-        location.hash = hash;
-        this.hash = location.hash;
-        if (Browser.IE) {
-            this.iframe.open();
-            this.iframe.close();
-            this.iframe.location.hash = this.hash;
-        }
-        this.change(hash);
-    },
-    checkHash: function() {
-        if (Browser.IE) {
-            var f = $("msieframe");
-            var iframe = f.contentDocument || f.contentWindow.document;
-            if (this.hash != iframe.location.hash ) {
-                this.hash  = iframe.location.hash;
-                this.hash  = ( this.hash == '#' ) ? '' : this.options.defaultHash;
-                location.hash = this.hash;
-                var hash = this.hash ? this.hash : this.options.defaultHash;
-                this.change(hash);
-            }
-            return;
-        }
-        //console.log(this.hash+"-"+location.hash);
-        if(this.hash != location.hash) {
-            console.log('----');
-            this.hash = location.hash;
-            var hash = this.hash ? this.hash : this.options.defaultHash;
-            this.change(hash);
-        }
-    },
-    /* private methods */
-    change: function(hash) {
-        if (this.options.binders) {
-            if(isArray(this.options.binders)) {
-                for(i = 0; i < this.options.binders.length; i++) {
-                    this.options.binders[i].fire('change',hash);
-                }
-            }
-            else { 
-                alert('isHash');
-                this.options.binders.fire('change',hash);
-            }
-        }
-    }
+var observer = new Observer();
+observer.observe('change', function(hash) {
+    alert(hash);
 });
 
-var observer = new Observer();
-var callback = function(hash) {
-    alert(hash);
-};
-observer.observe('change', callback);
-
 var aHistory = new History({
-    binders: observer
+    binding: observer
 });
 
 </script>
